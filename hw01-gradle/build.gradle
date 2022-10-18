@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'com.github.johnrengelman.shadow'
 }
 
 version '0.0.1-SNAPSHOT'
@@ -11,9 +12,15 @@ repositories {
 
 dependencies {
     implementation 'com.google.guava:guava'
+}
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+shadowJar {
+    archiveBaseName.set('gradleSayHello')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'com.example.Main'
+    }
 }
 
 task customFatJar(type: Jar) {
@@ -26,7 +33,4 @@ task customFatJar(type: Jar) {
     with jar
 }
 
-test {
-    useJUnitPlatform()
-}
-
+tasks.build.dependsOn tasks.shadowJar
