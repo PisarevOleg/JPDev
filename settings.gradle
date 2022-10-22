@@ -1,4 +1,6 @@
 rootProject.name = 'demo'
 
 include 'hw01-gradle'
+include 'hw04-gradle'
+include 'hw04-gradle'
 
