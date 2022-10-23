@@ -1,5 +1,7 @@
 package homework;
 
+import lombok.SneakyThrows;
+
 public class Customer {
     private final long id;
     private String name;
@@ -11,6 +13,13 @@ public class Customer {
         this.id = id;
         this.name = name;
         this.scores = scores;
+    }
+
+    @SneakyThrows
+    public Customer(Customer customer) {
+        this.id = customer.getId();
+        this.name = customer.getName();
+        this.scores = customer.getScores();
     }
 
     public long getId() {
@@ -49,16 +58,15 @@ public class Customer {
 
         Customer customer = (Customer) o;
 
-        if (id != customer.id) return false;
-        if (scores != customer.scores) return false;
-        return name != null ? name.equals(customer.name) : customer.name == null;
+        return id == customer.id;
+        //if (scores != customer.scores) return false;
+        //return name != null ? name.equals(customer.name) : customer.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (scores ^ (scores >>> 32));
-        return result;
+        //result = 31 * result + (name != null ? name.hashCode() : 0);
+        //result = 31 * result + (int) (scores ^ (scores >>> 32));
+        return (int) (id ^ (id >>> 32));
     }
 }

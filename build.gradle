@@ -22,7 +22,9 @@ allprojects {
         dependencies {
             imports {
                 mavenBom "org.springframework.boot:spring-boot-dependencies:2.7.2"
+                mavenBom "org.projectlombok:lombok:1.18.24"
             }
+
             dependency "com.google.guava:guava:${Versions.guava}"
             dependency "org.springframework.boot:spring-boot-starter:2.7.4"
         }

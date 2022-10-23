@@ -1,6 +1,5 @@
 package homework;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ class CustomerTest {
     }
 
     @Test
-    @Disabled //надо удалить
+//    @Disabled //надо удалить
     @DisplayName("Объект Customer как ключ в карте")
     void customerAsKeyTest() {
         //given
@@ -43,7 +42,6 @@ class CustomerTest {
         //when
         long newScore = customer.getScores() + 10;
         String factData = map.get(new Customer(customerId, "IvanChangedName", newScore));
-
         //then
         assertThat(factData).isEqualTo(expectedData);
 
@@ -57,7 +55,7 @@ class CustomerTest {
     }
 
     @Test
-    @Disabled //надо удалить
+//    @Disabled //надо удалить
     @DisplayName("Сортировка по полю score, итерация по возрастанию")
     void scoreSortingTest() {
         //given
@@ -97,7 +95,7 @@ class CustomerTest {
     }
 
     @Test
-    @Disabled //надо удалить
+//    @Disabled //надо удалить
     @DisplayName("Модификация коллекции")
     void mutationTest() {
         //given
@@ -119,7 +117,7 @@ class CustomerTest {
     }
 
     @Test
-    @Disabled //надо удалить
+//    @Disabled //надо удалить
     @DisplayName("Возвращание в обратном порядке")
     void reverseOrderTest() {
         //given
