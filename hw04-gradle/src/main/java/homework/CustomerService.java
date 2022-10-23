@@ -4,7 +4,7 @@ package homework;
 import java.util.*;
 
 public class CustomerService {
-    private final NavigableMap<Customer, String> map = new TreeMap<>(Comparator.comparingLong(Customer::getScores));
+    private final NavigableMap<Customer, String> map = new TreeMap<>(Comparator.comparing(Customer::getScores));
 
     //todo: 3. надо реализовать методы этого класса
     //важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
