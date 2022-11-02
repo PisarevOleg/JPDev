@@ -29,7 +29,6 @@ public class Boxing {
         System.out.println(counter);
     }
 
-
     private static void calcInt() throws InterruptedException {
         final int limit = Integer.MAX_VALUE;
         int counter = 0;
