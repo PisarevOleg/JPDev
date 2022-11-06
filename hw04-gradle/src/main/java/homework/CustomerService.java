@@ -4,7 +4,14 @@ package homework;
 import java.util.*;
 
 public class CustomerService {
-    private final NavigableMap<Customer, String> map = new TreeMap<>(Comparator.comparing(Customer::getScores));
+    Comparator<Customer> compare = new Comparator<Customer>() {
+        @Override public int compare(Customer e1, Customer e2) {
+            return Long.compare(e1.getScores(),e2.getScores());
+        }
+    };
+    private final NavigableMap<Customer, String> map = new TreeMap<>(compare);
+    // так не интересно
+    //private final NavigableMap<Customer, String> map = new TreeMap<>(Comparator.comparing(Customer::getScores));
 
     //todo: 3. надо реализовать методы этого класса
     //важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
