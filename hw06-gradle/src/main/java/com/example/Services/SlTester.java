@@ -1,31 +1,24 @@
 package com.example.Services;
 
 import com.google.common.reflect.ClassPath;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class SlTester {
-    @Autowired
+
     List<ClassPath.ClassInfo> testClassesList;
 
-    public List<Boolean> runnerTest() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public SlTester(List<ClassPath.ClassInfo> testClassesList) {
+        this.testClassesList=testClassesList;
+    }
 
-        return testClassesList.stream().map(item -> {
-            Class<?> clazz = null;
+    public List<Boolean> runnerTest() {
+        return testClassesList.stream().flatMap(item -> {
             try {
-                clazz = Class.forName(item.getName());
-                Constructor<?> constructor = clazz.getConstructor();
-                Object instance = constructor.newInstance();
-
                 SlTestOperationImplementor implementor = new SlTestOperationImplementor();
-                return implementor.CheckInstance(instance);
+                return implementor.checkInstance(item.getName()).stream();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

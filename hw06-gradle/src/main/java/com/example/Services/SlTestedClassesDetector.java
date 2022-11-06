@@ -4,9 +4,6 @@ import com.example.Annotation.SlClassMark;
 import com.example.Annotation.SlTest;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,13 +12,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Service
-@AllArgsConstructor
 public class SlTestedClassesDetector {
-    @Autowired
     String wrappingPackageName;
+    public SlTestedClassesDetector(String wrappingPackageName) {
+        this.wrappingPackageName=wrappingPackageName;
+    }
 
-    @Bean
-    List<ClassPath.ClassInfo> TestClassesList() throws IOException {
+    public List<ClassPath.ClassInfo> testClassesList() throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         ClassPath classPath = ClassPath.from(classLoader);
         ImmutableSet<ClassPath.ClassInfo> set = classPath.getTopLevelClassesRecursive(wrappingPackageName);
