@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.projectlombok:lombok"
+    implementation "com.google.guava:guava"
+}
