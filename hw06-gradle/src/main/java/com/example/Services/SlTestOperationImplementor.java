@@ -6,6 +6,7 @@ import com.example.Annotation.SlTest;
 import com.example.Exceptions.CheckedFooException;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -14,54 +15,68 @@ import java.util.List;
 
 @Service
 public class SlTestOperationImplementor {
-    public <T> Boolean CheckInstance(T checkInstance) {
-        boolean errorFlag = false;
-        List<Method> beforeMethods = Arrays.stream(checkInstance.getClass().getDeclaredMethods()).filter(
+    public List<Boolean> checkInstance(String checkNameInstance) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Object checkItemInstance = ((Class.forName(checkNameInstance)).getConstructor()).newInstance();
+
+        List<Method> beforeMethods = Arrays.stream(checkItemInstance.getClass().getDeclaredMethods()).filter(
                 m -> !Arrays.stream(m.getAnnotations()).filter(SlBefore.class::isInstance).toList().isEmpty()
         ).toList();
 
-        List<Method> testMethods = Arrays.stream(checkInstance.getClass().getDeclaredMethods()).filter(
+        List<Method> testMethods = Arrays.stream(checkItemInstance.getClass().getDeclaredMethods()).filter(
                 m -> !Arrays.stream(m.getAnnotations()).filter(SlTest.class::isInstance).toList().isEmpty()
         ).toList();
 
-        List<Method> afterMethods = Arrays.stream(checkInstance.getClass().getDeclaredMethods()).filter(
+        List<Method> afterMethods = Arrays.stream(checkItemInstance.getClass().getDeclaredMethods()).filter(
                 m -> !Arrays.stream(m.getAnnotations()).filter(SlAfter.class::isInstance).toList().isEmpty()
         ).toList();
 
-        try {
-            ExecBeforeMethods(checkInstance,beforeMethods);
-            ExecTestMethods(checkInstance,testMethods);
+        return testMethods.stream().map(t -> {
+            boolean errorFlag = false;
 
-        } catch (Exception e) {
-            errorFlag=true;
-            System.out.println("an error occurred ... the test check broke and aborted");
-
-        } finally {
             try {
-                ExecAfterMethods(checkInstance, afterMethods);
+                Class<?> clazz = Class.forName(checkNameInstance);
+                Constructor<?> constructor = clazz.getConstructor();
+                Object checkInstance= constructor.newInstance();
+
+                try {
+                    execBeforeMethods(checkInstance,beforeMethods);
+                    execTestMethods(checkInstance,testMethods);
+
+                } catch (Exception e) {
+                    errorFlag=true;
+                    System.out.println("an error occurred ... the test check broke and aborted");
+
+                } finally {
+                    try {
+                        execAfterMethods(checkInstance, afterMethods);
+                    } catch (Exception e) {
+                        errorFlag = true;
+                    }
+                }
             } catch (Exception e) {
                 errorFlag = true;
+                System.out.println("an error occurred ...");
             }
-        }
 
-        return !errorFlag;
+            return errorFlag;
+        }).toList();
     }
 
-    private <T> void ExecBeforeMethods(T checkInstance,List<Method> beforeMethods) throws InvocationTargetException, IllegalAccessException {
+    private <T> void execBeforeMethods(T checkInstance, List<Method> beforeMethods) throws InvocationTargetException, IllegalAccessException {
         for(Method method: beforeMethods) {
             if(!Modifier.isPublic(method.getModifiers())) method.setAccessible(true);
             method.invoke(checkInstance);
         }
     }
 
-    private <T> void ExecTestMethods(T checkInstance,List<Method> testMethods) throws InvocationTargetException, IllegalAccessException {
+    private <T> void execTestMethods(T checkInstance, List<Method> testMethods) throws InvocationTargetException, IllegalAccessException {
         for(Method method: testMethods) {
             if(!Modifier.isPublic(method.getModifiers())) method.setAccessible(true);
             method.invoke(checkInstance);
         }
     }
 
-    private <T> void ExecAfterMethods(T checkInstance,List<Method> afterMethods) {
+    private <T> void execAfterMethods(T checkInstance, List<Method> afterMethods) {
         boolean errorFlag = false;
 
         for(Method method: afterMethods) {
