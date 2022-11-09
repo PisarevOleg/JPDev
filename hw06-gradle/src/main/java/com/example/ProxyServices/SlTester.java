@@ -1,4 +1,4 @@
-package com.example.Services;
+package com.example.ProxyServices;
 
 import com.google.common.reflect.ClassPath;
 import org.springframework.stereotype.Service;

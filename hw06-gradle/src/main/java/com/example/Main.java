@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.Services.SlTestedClassesDetector;
-import com.example.Services.SlTester;
+import com.example.ProxyServices.SlTestedClassesDetector;
+import com.example.ProxyServices.SlTester;
 import com.google.common.reflect.ClassPath;
 
 import java.io.IOException;
